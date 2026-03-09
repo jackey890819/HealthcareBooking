@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace HealthcareBooking.Core.Entities;
 
 /// <summary>
@@ -14,9 +10,9 @@ public class Appointment
 
     // 外來鍵 Foreign keys
     public int PatientId { get; set; }
-    public int DoctorId { get; set; }
+    public int ClinicId { get; set; }
 
     // 導覽屬性 Navigation properties
     public required Patient Patient { get; set; }
-    public required Doctor Doctor { get; set; }
+    public required Clinic Clinic { get; set; }
 }

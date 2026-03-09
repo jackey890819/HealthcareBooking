@@ -10,5 +10,5 @@ public class Doctor
     public required string Name { get; set; }
 
     // 導覽屬性 Navigation properties
-    public ICollection<Appointment> Appointments { get; set; } = [];
+    public ICollection<Clinic> Clinics { get; set; } = [];
 }
