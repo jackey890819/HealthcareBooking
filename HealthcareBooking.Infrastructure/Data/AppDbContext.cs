@@ -1,6 +1,7 @@
 using System.Numerics;
 using System.Reflection.Emit;
 using HealthcareBooking.Core.Entities; // 記得引入你的 Entities
+using HealthcareBooking.Infrastructure.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
 namespace HealthcareBooking.Infrastructure.Data;
@@ -17,6 +18,13 @@ public class AppDbContext : DbContext
     public DbSet<Doctor> Doctors { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<Clinic> Clinics { get; set; }
+
+    override protected void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        // 註冊攔截器，這裡我們把 AuditInterceptor 加入到 EF Core 的執行管線中
+        optionsBuilder.AddInterceptors(new AuditInterceptor());
+    }
 
     // 覆寫 OnModelCreating，這裡就是我們寫 Fluent API 的地方
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,5 +56,12 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Clinic>()
             .Property(c => c.RowVersion)
             .IsRowVersion(); // 設定 RowVersion 為樂觀鎖版本欄位
+
+
+        // 針對有實作 ISoftDeletable 的實體，加上全域過濾器 Global Query Filter
+        modelBuilder.Entity<Patient>().HasQueryFilter(p => !p.IsDeleted);
+        modelBuilder.Entity<Doctor>().HasQueryFilter(d => !d.IsDeleted);
+        modelBuilder.Entity<Clinic>().HasQueryFilter(c => !c.IsDeleted);
+        modelBuilder.Entity<Appointment>().HasQueryFilter(a => !a.IsDeleted);
     }
 }
