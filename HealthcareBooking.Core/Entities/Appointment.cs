@@ -13,6 +13,6 @@ public class Appointment
     public int ClinicId { get; set; }
 
     // 導覽屬性 Navigation properties
-    public required Patient Patient { get; set; }
-    public required Clinic Clinic { get; set; }
+    public Patient Patient { get; set; } = null!;
+    public Clinic Clinic { get; set; } = null!;
 }
