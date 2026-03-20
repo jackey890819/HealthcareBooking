@@ -12,10 +12,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DTOs\" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.13.11" />
   </ItemGroup>
 
   <ItemGroup>
