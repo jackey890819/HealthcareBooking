@@ -45,6 +45,12 @@ public class GlobalExceptionHandler : IExceptionHandler
                 Title = "Not Found",
                 Detail = exception.Message
             },
+            InvalidOperationException => new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Bad Request",
+                Detail = exception.Message
+            },
             DbUpdateConcurrencyException => new ProblemDetails
             {
                 Status = StatusCodes.Status409Conflict,

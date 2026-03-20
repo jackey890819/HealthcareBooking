@@ -31,13 +31,12 @@ public class BookService
         }
         // 更新門診已預約人數
         clinic.AddBooking();
-        await _clinicRepository.UpdateAsync(clinic);
         // 創建預約
         var appointment = new Appointment
         {
             PatientId = patientId,
             ClinicId = clinicId,
-            AppointmentDate = DateTime.Now // 暫時使用當前時間，實際應根據需求調整
+            AppointmentDate = DateTime.UtcNow // 暫時使用當前時間，實際應根據需求調整
         };
         await _appointmentRepository.AddAsync(appointment);
         await _unitOfWork.SaveChangesAsync();
