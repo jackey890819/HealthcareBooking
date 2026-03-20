@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using HealthcareBooking.Core.Interfaces;
 
 namespace HealthcareBooking.Core.Entities;
 
 /// <summary>
 /// 門診
 /// </summary>
-public class Clinic
+public class Clinic : IAuditable, ISoftDeletable
 {
     public int Id { get; private set; }
     public int DoctorId { get; private set; }
@@ -16,6 +17,10 @@ public class Clinic
     public int CurrentBooked { get; private set; } = 0;
     // 用來實現樂觀鎖(Optimistic Concurrency Control)，確保在更新診所資訊時不會發生衝突
     public byte[] RowVersion { get; private set; } = [];
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public bool IsDeleted { get; set; }
+    public DateTime? DeletedAt { get; set; }
 
     // 導航屬性，表示門診與醫生之間的關聯
     public Doctor Doctor { get; private set; } = null!;
