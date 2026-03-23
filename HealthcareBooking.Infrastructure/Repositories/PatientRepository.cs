@@ -42,4 +42,23 @@ public class PatientRepository : IPatientRepository
         _context.Patients.Update(patient);
         return Task.CompletedTask;
     }
+
+    /// <summary>
+    /// 【進階查詢示範】一次查出病患的完整預約歷史，包含每次預約的門診資訊和醫生資訊
+    /// </summary>
+    /// <param name="patientId"></param>
+    /// <returns></returns>
+    public async Task<Patient?> GetPatientWithHistoryAsync(int patientId)
+    {
+        return await _context.Patients
+            // 1. 唯讀最佳化：告訴 EF 不用追蹤這個物件，省下大量記憶體！
+            .AsNoTracking()
+            // 2. 貪婪載入：解決 N+1 查詢問題
+            .Include(p => p.Appointments)
+                .ThenInclude(a => a.Clinic)
+                    .ThenInclude(c => c.Doctor)
+            // 3. 【進階效能調校】：避免笛卡爾積 (Cartesian Explosion) 導致記憶體爆炸
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(p => p.Id == patientId);
+    }
 }

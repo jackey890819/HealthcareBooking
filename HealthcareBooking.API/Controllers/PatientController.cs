@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using HealthcareBooking.API.Attributes;
 using HealthcareBooking.API.DTOs;
+using HealthcareBooking.Core.DTOs;
 using HealthcareBooking.Core.Entities;
 using HealthcareBooking.Core.Services;
 using Microsoft.AspNetCore.Http;
@@ -84,6 +85,17 @@ public class PatientController : ControllerBase
     {
         await _patientService.DeletePatientAsync(id);
         return NoContent();
+    }
+
+    [HttpGet("{id:int}/history")]
+    [EndpointSummary("取得病患預約歷史")]
+    [EndpointDescription("根據病患編號取得病患的預約歷史資料。")]
+    [ProducesResponseType(typeof(PatientHistoryDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<PatientHistoryDto>> GetPatientHistory([FromRoute] int id, [FromServices] PatientQueryService patientQueryService)
+    {
+        var patientHistory = await patientQueryService.GetPatientHistoryAsync(id);
+        return Ok(patientHistory);
     }
 }
 

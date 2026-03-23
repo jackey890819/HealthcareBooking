@@ -5,4 +5,7 @@ using HealthcareBooking.Core.Entities;
 
 namespace HealthcareBooking.Core.Repositories;
 
-public interface IPatientRepository : IRepository<Patient>;
+public interface IPatientRepository : IRepository<Patient>
+{
+    Task<Patient?> GetPatientWithHistoryAsync(int patientId);
+}
