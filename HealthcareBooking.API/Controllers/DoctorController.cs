@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using HealthcareBooking.API.Attributes;
 using HealthcareBooking.API.DTOs;
+using HealthcareBooking.Core.DTOs;
 using HealthcareBooking.Core.Entities;
 using HealthcareBooking.Core.Services;
 using Microsoft.AspNetCore.Http;
@@ -23,8 +24,8 @@ public class DoctorController : ControllerBase
     [HttpGet]
     [EndpointSummary("取得所有醫生")]
     [EndpointDescription("回傳系統中所有醫生資料。")]
-    [ProducesResponseType(typeof(List<Doctor>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IReadOnlyList<Doctor>>> GetDoctors()
+    [ProducesResponseType(typeof(List<DoctorDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<IReadOnlyList<DoctorDto>>> GetDoctors()
     {
         var doctors = await _doctorService.GetAllDoctorsAsync();
         return Ok(doctors);
@@ -33,9 +34,9 @@ public class DoctorController : ControllerBase
     [HttpGet("{id:int}")]
     [EndpointSummary("依編號取得醫生")]
     [EndpointDescription("根據醫生編號取得單筆醫生資料。")]
-    [ProducesResponseType(typeof(Doctor), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DoctorDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Doctor>> GetDoctor(int id)
+    public async Task<ActionResult<DoctorDto>> GetDoctor(int id)
     {
         var doctor = await _doctorService.GetDoctorByIdAsync(id);
         return Ok(doctor);

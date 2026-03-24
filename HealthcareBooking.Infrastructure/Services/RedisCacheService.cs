@@ -16,9 +16,9 @@ public class RedisCacheService : ICacheService
         _distributedCache = distributedCache;
     }
 
-    public async Task<T?> GetAsync<T>()
+    public async Task<T?> GetAsync<T>(string key)
     {
-        var value = await _distributedCache.GetStringAsync(typeof(T).Name);
+        var value = await _distributedCache.GetStringAsync(key);
         if (value == null)
         {
             return default;

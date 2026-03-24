@@ -1,5 +1,6 @@
 using HealthcareBooking.Core.DTOs;
 using HealthcareBooking.Core.Entities;
+using HealthcareBooking.Core.Mappers;
 using HealthcareBooking.Core.Repositories;
 
 namespace HealthcareBooking.Core.Services;
@@ -25,20 +26,6 @@ public class PatientQueryService
 
         // 將 patient 實體轉換為 DTO 並回傳
         // (例如手動 mapping 或是使用 AutoMapper)
-        return MapToDto(patient);
-    }
-
-    private static PatientHistoryDto MapToDto(Patient patient)
-    {
-        return new PatientHistoryDto(
-            patient.Id,
-            patient.Name,
-            patient.Appointments.Select(a => new AppointmentDetailDto(
-                a.Id,
-                a.AppointmentDate,
-                a.Clinic.ClinicDate.ToString("yyyy-MM-dd"),
-                a.Clinic.Doctor.Name
-            )).ToList()
-        );
+        return PatientMapper.ToHistoryDto(patient);
     }
 }

@@ -10,8 +10,9 @@ public interface ICacheService
     /// 取得快取資料
     /// </summary>
     /// <typeparam name="T">快取資料的類型</typeparam>
+    /// <param name="key">快取資料的 key</param>
     /// <returns>快取資料的值，如果不存在則為 null</returns>
-    Task<T?> GetAsync<T>();
+    Task<T?> GetAsync<T>(string key);
 
     /// <summary>
     /// 設定快取資料，並指定過期時間
