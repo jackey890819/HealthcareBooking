@@ -1,3 +1,4 @@
+using Hangfire;
 using HealthcareBooking.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -12,6 +13,7 @@ public static class WebApplicationExtensions
         {
             app.MapOpenApi();
             app.MapScalarApiReference();
+            app.UseHangfireDashboard("/hangfire");
         }
 
         app.UseExceptionHandler();

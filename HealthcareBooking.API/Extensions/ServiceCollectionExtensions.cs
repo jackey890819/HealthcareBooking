@@ -7,6 +7,7 @@ using HealthcareBooking.Infrastructure.Repositories;
 using HealthcareBooking.Infrastructure.Services;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
+using Hangfire;
 
 namespace HealthcareBooking.API.Extensions;
 
@@ -57,6 +58,21 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<ICacheService, RedisCacheService>();
 
+        return services;
+    }
+
+    // 註冊 Hangfire 服務
+    public static IServiceCollection AddHangfireServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHangfire(config =>
+        {
+            config
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
+        });
+        services.AddHangfireServer();
         return services;
     }
 }
