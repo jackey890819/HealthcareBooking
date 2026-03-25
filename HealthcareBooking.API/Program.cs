@@ -5,7 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddApiServices()
     .AddDatabaseServices(builder.Configuration)
-    .AddApplicationServices();
+    .AddApplicationServices()
+    .AddCacheServices(builder.Configuration);
 
 var app = builder.Build();
 await app.SeedDatabaseAsync();
