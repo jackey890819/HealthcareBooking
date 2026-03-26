@@ -61,7 +61,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    // 註冊 Hangfire 服務
+    // 註冊 Hangfire 服務與 Job Scheduler 實作
     public static IServiceCollection AddHangfireServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHangfire(config =>
@@ -73,6 +73,7 @@ public static class ServiceCollectionExtensions
                 .UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
         });
         services.AddHangfireServer();
+        services.AddScoped<IJobScheduler, HangfireJobScheduler>();
         return services;
     }
 

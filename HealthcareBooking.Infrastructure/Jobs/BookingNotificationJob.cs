@@ -1,7 +1,7 @@
 using Hangfire;
 using HealthcareBooking.Core.Interfaces;
 
-namespace HealthcareBooking.Core.Jobs;
+namespace HealthcareBooking.Infrastructure.Jobs;
 
 public class BookingNotificationJob(INotificationService notificationService)
 {
