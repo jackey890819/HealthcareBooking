@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Hangfire;
 using HealthcareBooking.Core.Entities;
+using HealthcareBooking.Core.Interfaces;
+using HealthcareBooking.Core.Jobs;
 using HealthcareBooking.Core.Repositories;
+
 
 namespace HealthcareBooking.Core.Services;
 
@@ -12,11 +16,15 @@ public class BookService
     private readonly IClinicRepository _clinicRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public BookService(IAppointmentRepository appointmentRepository, IClinicRepository clinicRepository, IUnitOfWork unitOfWork)
+    // Hangfire 
+    private readonly IBackgroundJobClient _backgroundJobClient;
+
+    public BookService(IAppointmentRepository appointmentRepository, IClinicRepository clinicRepository, IUnitOfWork unitOfWork, IBackgroundJobClient backgroundJobClient)
     {
         _appointmentRepository = appointmentRepository;
         _clinicRepository = clinicRepository;
         _unitOfWork = unitOfWork;
+        _backgroundJobClient = backgroundJobClient;
     }
 
     public async Task<int> BookAppointmentAsync(int patientId, int clinicId)
@@ -40,6 +48,10 @@ public class BookService
         };
         await _appointmentRepository.AddAsync(appointment);
         await _unitOfWork.SaveChangesAsync();
+
+        // 排程發送預約成功通知（最多重試 3 次，每次間隔 5 分鐘）
+        _backgroundJobClient.Enqueue<BookingNotificationJob>(x => x.ExecuteAsync(patientId, clinicId));
+
         return appointment.Id;
     }
 }

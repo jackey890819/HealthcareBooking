@@ -75,4 +75,11 @@ public static class ServiceCollectionExtensions
         services.AddHangfireServer();
         return services;
     }
+
+    // 註冊假的通知服務實作
+    public static IServiceCollection AddNotificationServices(this IServiceCollection services)
+    {
+        services.AddScoped<INotificationService, FakeEmailService>();
+        return services;
+    }
 }
