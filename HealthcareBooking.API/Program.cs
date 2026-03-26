@@ -6,7 +6,9 @@ builder.Services
     .AddApiServices()
     .AddDatabaseServices(builder.Configuration)
     .AddApplicationServices()
-    .AddCacheServices(builder.Configuration);
+    .AddCacheServices(builder.Configuration)
+    .AddHangfireServices(builder.Configuration)
+    .AddNotificationServices();
 
 var app = builder.Build();
 await app.SeedDatabaseAsync();
