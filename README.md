@@ -1,10 +1,10 @@
-# HealthcareBooking 
+# 醫療掛號與紀錄管理 API (Backend Architecture Showcase)
 
 ![image](https://github.com/jackey890819/HealthcareBooking/blob/main/ScalarApiDoc.png)
 
-這是一個練習用的後端 API (Conrtoller API) 專案，主要用於展示 ASP.NET Core 的基本功能和結構。
+這是一個基於 ASP.NET Core 與 Clean Architecture 設計的後端架構展示專案。
 
-專案包含了一個簡單的醫療預約系統，使用者可以瀏覽醫生列表、查看醫生詳細資訊以及預約醫生。
+本專案以醫療資訊系統為背景，除了實作基礎的掛號與看診業務邏輯外，更著重於解決實務上常見的工程挑戰。專案中導入了樂觀併發控制 (OCC)、自動化軟刪除攔截、Redis 快取擊穿防護、Hangfire 背景排程與 SignalR 即時推播，旨在展示現代化後端開發的架構思維與效能調校能力。
 
 
 ## 專案亮點
