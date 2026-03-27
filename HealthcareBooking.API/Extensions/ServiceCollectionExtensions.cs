@@ -83,4 +83,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<INotificationService, FakeEmailService>();
         return services;
     }
+
+    // 註冊 SignalR 服務
+    public static IServiceCollection AddSignalRServices(this IServiceCollection services)
+    {
+        services.AddSignalR();
+        return services;
+    }
 }

@@ -19,7 +19,9 @@ public static class WebApplicationExtensions
         app.UseExceptionHandler();
         app.UseHttpsRedirection();
         app.UseAuthorization();
+        app.UseStaticFiles(); // 啟用 wwwroot 靜態檔案支援
         app.MapControllers();
+        app.MapSignalRHubs();
 
         return app;
     }
@@ -34,4 +36,12 @@ public static class WebApplicationExtensions
         await context.Database.MigrateAsync();
         await AppDbContextSeeder.SeedAsync(context);
     }
+
+    // SignalR 的 Hub 需要在這裡註冊，才能在 Controller 中注入 IHubContext<ClinicHub> 使用
+    public static WebApplication MapSignalRHubs(this WebApplication app)
+    {
+        app.MapHub<Hubs.ClinicHub>("/clinicHub");
+        return app;
+    }
+
 }

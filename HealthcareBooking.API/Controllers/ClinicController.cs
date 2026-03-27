@@ -2,10 +2,12 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using HealthcareBooking.API.Attributes;
 using HealthcareBooking.API.DTOs;
+using HealthcareBooking.API.Hubs;
 using HealthcareBooking.Core.Entities;
 using HealthcareBooking.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace HealthcareBooking.API.Controllers;
 
@@ -77,6 +79,23 @@ public class ClinicController : ControllerBase
     {
         await _clinicService.DeleteClinicAsync(id);
         return NoContent();
+    }
+
+    [HttpPost("{clinicId:int}/next-patient")]
+    [EndpointSummary("呼叫指定號碼的病患")]
+    [EndpointDescription("呼叫指定號碼的病患，並透過 SignalR Hub 通知前端更新叫號資訊。")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> CallNextPatient(
+        [FromRoute] int clinicId, 
+        [FromBody] int nextPatientNumber,
+        [FromServices] IHubContext<ClinicHub> hubContext)
+    {
+        // TODO: 更新門診的目前叫號資訊 (目前尚未實作，僅模擬呼叫)
+        //await _clinicService.UpdateCurrentAsync(clinicId, nextPatientNumber);
+        // 模擬呼叫 SignalR Hub 通知前端更新叫號資訊
+        await hubContext.Clients.Group($"Clinic_{clinicId}").SendAsync("ReceiveNextPatient", nextPatientNumber);
+
+        return Ok(new { Message = $"已經成功呼叫第 {nextPatientNumber} 號" });
     }
 }
 

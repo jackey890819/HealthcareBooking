@@ -8,7 +8,8 @@ builder.Services
     .AddApplicationServices()
     .AddCacheServices(builder.Configuration)
     .AddHangfireServices(builder.Configuration)
-    .AddNotificationServices();
+    .AddNotificationServices()
+    .AddSignalRServices();
 
 var app = builder.Build();
 await app.SeedDatabaseAsync();

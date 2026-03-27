@@ -1,0 +1,66 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>醫院大廳 - 即時叫號螢幕</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background-color: #1e1e1e; color: white; padding: 50px; }
+        .clinic-box { border: 2px solid #4CAF50; border-radius: 10px; padding: 20px; display: inline-block; margin: 20px; width: 300px; }
+        .number-display { font-size: 80px; color: #4CAF50; font-weight: bold; margin: 20px 0; }
+        .status { color: #aaaaaa; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>🏥 智慧候診大廳</h1>
+    
+    <div class="clinic-box">
+        <h2>👨‍⚕️ 第 3 診間</h2>
+        <div class="status" id="connectionStatus">連線中...</div>
+        <div class="number-display" id="currentNumber">--</div>
+    </div>
+
+    <script>
+        const clinicIdToWatch = 3; // 假設這個螢幕專門監聽第 3 診間
+
+        // 1. 建立與後端 Hub 的連線
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/clinichub") // 對應你 Program.cs 裡面的路徑
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        // 2. 註冊事件監聽：當後端呼叫 "ReceiveNextPatient" 時要做什麼事
+        connection.on("ReceiveNextPatient", function (nextNumber) {
+            console.log("收到廣播！下一個號碼是：" + nextNumber);
+            // 更新畫面上的號碼
+            document.getElementById("currentNumber").innerText = nextNumber;
+            
+            // (選做) 模擬醫院的叮咚聲！
+            let utterance = new SpeechSynthesisUtterance(`第 ${nextNumber} 號請進診間`);
+            utterance.lang = 'zh-TW';
+            window.speechSynthesis.speak(utterance);
+        });
+
+        // 3. 啟動連線，成功後呼叫後端的 JoinClinicGroup 加入群組
+        async function start() {
+            try {
+                await connection.start();
+                document.getElementById("connectionStatus").innerText = "✅ 系統連線正常";
+                document.getElementById("connectionStatus").style.color = "#4CAF50";
+                
+                // 呼叫後端我們寫好的方法，把自己加入 Clinic_3 這個群組
+                await connection.invoke("JoinClinicGroup", clinicIdToWatch);
+                console.log(`已成功訂閱第 ${clinicIdToWatch} 診間的廣播`);
+            } catch (err) {
+                console.error("連線失敗: ", err);
+                document.getElementById("connectionStatus").innerText = "❌ 連線失敗";
+                document.getElementById("connectionStatus").style.color = "red";
+                setTimeout(start, 5000); // 斷線重連機制
+            }
+        }
+
+        start();
+    </script>
+</body>
+</html>
