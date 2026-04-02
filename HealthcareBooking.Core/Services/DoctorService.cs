@@ -142,5 +142,5 @@ public class DoctorService
     }
 }
 
-// file 修飾詞將此型別限制在本檔案中，避免污染命名空間
-file sealed record CacheEntry<T>(T? Value);
+// internal 修飾詞將此型別限制在此組件內，供測試專案透過 InternalsVisibleTo 存取
+internal sealed record CacheEntry<T>(T? Value);

@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="HealthcareBooking.API/HealthcareBooking.API.csproj" />
+  <Project Path="HealthcareBooking.Core.Tests/HealthcareBooking.Core.Tests.csproj" Id="39e8d050-81e8-4bb6-80dc-cbf24e8bc7ed" />
   <Project Path="HealthcareBooking.Core/HealthcareBooking.Core.csproj" Id="bab75119-137c-4961-bf54-294b2189ad8c" />
   <Project Path="HealthcareBooking.Infrastructure/HealthcareBooking.Infrastructure.csproj" Id="1ae905be-2b0a-453e-bfb2-237025e81bf7" />
 </Solution>
